@@ -2,21 +2,20 @@
 //                 Leo <https://github.com/leomelzer>
 /// <reference types="node" />
 
-import { FastifyPluginAsync, FastifyReply, FastifyRequest, RouteOptions } from 'fastify'
+import { FastifyReply, FastifyRequest, RouteOptions } from 'fastify'
 import { Stats } from 'node:fs'
+import { GetPluginTypes } from 'fastify-plugin'
 
-declare module 'fastify' {
-  interface FastifyReply {
-    sendFile(filename: string, rootPath?: string): FastifyReply;
-    sendFile(filename: string, options?: fastifyStatic.SendOptions): FastifyReply;
-    sendFile(filename: string, rootPath?: string, options?: fastifyStatic.SendOptions): FastifyReply;
-    download(filepath: string, options?: fastifyStatic.SendOptions): FastifyReply;
-    download(filepath: string, filename?: string): FastifyReply;
-    download(filepath: string, filename?: string, options?: fastifyStatic.SendOptions): FastifyReply;
-  }
+interface FastifyStaticPluginReply {
+  sendFile(filename: string, rootPath?: string): FastifyReply;
+  sendFile(filename: string, options?: fastifyStatic.SendOptions): FastifyReply;
+  sendFile(filename: string, rootPath?: string, options?: fastifyStatic.SendOptions): FastifyReply;
+  download(filepath: string, options?: fastifyStatic.SendOptions): FastifyReply;
+  download(filepath: string, filename?: string): FastifyReply;
+  download(filepath: string, filename?: string, options?: fastifyStatic.SendOptions): FastifyReply;
 }
 
-type FastifyStaticPlugin = FastifyPluginAsync<NonNullable<fastifyStatic.FastifyStaticOptions>>
+type FastifyStaticPlugin = GetPluginTypes<{ decorators: { reply: FastifyStaticPluginReply }, dependencies: [] }, NonNullable<fastifyStatic.FastifyStaticOptions>>
 
 declare namespace fastifyStatic {
   export interface SetHeadersResponse {
